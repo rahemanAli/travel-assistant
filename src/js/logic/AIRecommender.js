@@ -239,7 +239,16 @@ export class AIRecommender {
             });
 
             if (!response.ok) {
-                const errorJson = await response.json();
+                const errorText = await response.text();
+                let errorJson;
+                try {
+                    errorJson = JSON.parse(errorText);
+                } catch (e) {
+                    // It was likely HTML (Vercel 500 error)
+                    console.error('API Returned Non-JSON Error:', errorText);
+                    throw new Error(`Server Error (${response.status}): The backend crashed. Check Vercel logs.`);
+                }
+
                 console.error('API Error Response:', errorJson);
 
                 let debugMsg = '';

@@ -112,9 +112,17 @@ export default async function handler(req, res) {
         }
 
         const responseText = result.response.text();
+        console.log("Raw AI Response:", responseText); // Debug log
 
-        // Cleanup markdown if present
-        const jsonStr = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+        // ROBUST JSON EXTRACTION: Find the first '{' and last '}'
+        const firstOpen = responseText.indexOf('{');
+        const lastClose = responseText.lastIndexOf('}');
+
+        let jsonStr = responseText;
+        if (firstOpen !== -1 && lastClose !== -1) {
+            jsonStr = responseText.substring(firstOpen, lastClose + 1);
+        }
+
         const updatedTrip = JSON.parse(jsonStr);
 
         // Add metadata about which model was used (debug)
