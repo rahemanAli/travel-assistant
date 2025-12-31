@@ -1,7 +1,32 @@
 export default async function handler(req, res) {
-    // Health Check for debugging
+    // Health Check & Diagnostic Tool
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'ok', message: 'Travel Assistant API is Running!' });
+        const apiKey = process.env.GEMINI_API_KEY;
+        let diagnosis = { status: 'ok', message: 'Travel Assistant API is Running!' };
+
+        if (!apiKey) {
+            return res.status(500).json({ error: 'Missing GEMINI_API_KEY env var' });
+        }
+
+        // Try to list models to prove key works
+        try {
+            const listResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+            const data = await listResp.json();
+
+            diagnosis.key_check = listResp.ok ? 'SUCCESS' : 'FAILED';
+            diagnosis.status_code = listResp.status;
+
+            if (data.models) {
+                diagnosis.available_models = data.models.map(m => m.name.replace('models/', ''));
+            } else {
+                diagnosis.error_details = data;
+            }
+        } catch (e) {
+            diagnosis.key_check = 'ERROR';
+            diagnosis.error = e.message;
+        }
+
+        return res.status(200).json(diagnosis);
     }
 
     if (req.method !== 'POST') {
