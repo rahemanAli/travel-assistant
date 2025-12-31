@@ -22,10 +22,11 @@ export function ChatComponent() {
         </div>
         
         <div class="flex-none mt-md">
-            <form id="chat-form" class="relative">
-                <input type="text" id="chat-input" placeholder="Type your plan..." class="w-full bg-black/30 border border-white/10 rounded-full pl-lg pr-xxl py-md text-white focus:outline-none focus:border-secondary shadow-inner transition-colors">
-                <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-gradient-to-r from-secondary to-primary text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="ph ph-paper-plane-right text-lg"></i>
+            <form id="chat-form" class="relative flex gap-sm items-center">
+                <input type="text" id="chat-input" placeholder="Type your plan..." class="flex-1 bg-black/30 border border-white/10 rounded-full pl-lg pr-lg py-md text-white focus:outline-none focus:border-secondary shadow-inner transition-colors text-base" style="min-width: 0;">
+                
+                <button type="submit" class="w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-r from-secondary to-primary text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="ph ph-paper-plane-right text-xl"></i>
                 </button>
             </form>
         </div>
