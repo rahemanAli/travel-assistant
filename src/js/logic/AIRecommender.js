@@ -34,7 +34,8 @@ export class AIRecommender {
 
     getWeather(city) {
         if (!city) return this.weatherDB['default'];
-        const key = city.split(',')[0].toLowerCase().trim();
+        // Ensure city is a string to prevent .split crashes
+        const key = String(city).split(',')[0].toLowerCase().trim();
         // Fallback for unknown cities
         if (!this.weatherDB[key]) {
             return { temp: '22°C', condition: 'Sunny', summary: 'Enjoy the weather!' };
@@ -43,9 +44,13 @@ export class AIRecommender {
     }
 
     generateInsights(details) {
-        // Iterate over all stops
-        const cities = details.stops.length > 0 ? details.stops : [details.destination];
-        const intent = details.intent.toLowerCase();
+        // HARDENING: Ensure stops is valid array
+        const stops = Array.isArray(details.stops) ? details.stops : [];
+        const dest = details.destination || 'Unknown';
+
+        // Use stops if present, otherwise destination
+        const cities = stops.length > 0 ? stops : [dest];
+        const intent = (details.intent || '').toLowerCase();
 
         const insights = cities.map(city => {
             const weather = this.getWeather(city);
@@ -70,15 +75,24 @@ export class AIRecommender {
 
     generateItinerary(details) {
         // Simple heuristic: distribute activities based on city and vibe match
-        const days = Math.ceil((new Date(details.endDate) - new Date(details.startDate)) / (1000 * 60 * 60 * 24));
-        const itinerary = [];
-        const cities = details.stops.length > 0 ? details.stops : [details.destination.split(',')[0].trim()];
+        const start = new Date(details.startDate || Date.now());
+        const end = new Date(details.endDate || Date.now() + 86400000 * 3);
+        const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
 
-        let currentDate = new Date(details.startDate);
-        const daysPerCity = Math.floor(days / cities.length);
+        const itinerary = [];
+
+        // HARDENING: Ensure stops/destination exist
+        const stops = Array.isArray(details.stops) ? details.stops : [];
+        const mainDest = details.destination ? details.destination.split(',')[0].trim() : 'Destination';
+        const cities = stops.length > 0 ? stops : [mainDest];
+
+        let currentDate = new Date(start);
+        const daysPerCity = Math.max(1, Math.floor(days / cities.length));
 
         cities.forEach(city => {
-            const cityKey = city.toLowerCase().trim();
+            // HARDENING: Ensure city is string
+            const cityStr = String(city);
+            const cityKey = cityStr.toLowerCase().trim();
             const potentialActivities = this.activitiesDB[cityKey] || [];
 
             // Filter by vibe if matches
@@ -100,7 +114,7 @@ export class AIRecommender {
                         title: act.title,
                         date: currentDate.toISOString().split('T')[0],
                         time: act.time === 'Morning' ? '10:00' : (act.time === 'Afternoon' ? '14:00' : '19:00'),
-                        location: city,
+                        location: cityStr,
                         type: 'AI_GENERATED'
                     });
                 });
@@ -157,22 +171,26 @@ export class AIRecommender {
     }
 
     generateRecommendations(details) {
-        const cities = details.stops.length > 0 ? details.stops : [details.destination];
+        // HARDENING
+        const stops = Array.isArray(details.stops) ? details.stops : [];
+        const dest = details.destination || 'Unknown';
+        const cities = stops.length > 0 ? stops : [dest];
 
         // Return a map of City -> { restaurants, experiences }
         const allRecs = {};
 
         cities.forEach(city => {
-            const cityKey = city.split(',')[0].toLowerCase().trim();
+            const cityStr = String(city);
+            const cityKey = cityStr.split(',')[0].toLowerCase().trim();
             // Fallback Generator
-            allRecs[city] = {
+            allRecs[cityStr] = {
                 restaurants: [
-                    { name: `Top Rated in ${city}`, cuisine: 'Local Cuisine', rating: 4.7 },
-                    { name: `${city} Street Food`, cuisine: 'Street Food', rating: 4.5 },
+                    { name: `Top Rated in ${cityStr}`, cuisine: 'Local Cuisine', rating: 4.7 },
+                    { name: `${cityStr} Street Food`, cuisine: 'Street Food', rating: 4.5 },
                     { name: 'The View Lounge', cuisine: 'International', rating: 4.4 }
                 ],
                 experiences: [
-                    { title: `${city} Walking Tour`, duration: '3h' },
+                    { title: `${cityStr} Walking Tour`, duration: '3h' },
                     { title: 'Local Cooking Class', duration: '2h' },
                     { title: 'Historic Sites', duration: '4h' }
                 ]
@@ -182,8 +200,13 @@ export class AIRecommender {
         return allRecs;
     }
     calculateBudget(details) {
-        const days = Math.ceil((new Date(details.endDate) - new Date(details.startDate)) / (1000 * 60 * 60 * 24));
-        const cities = details.stops.length > 0 ? details.stops : [details.destination];
+        const start = new Date(details.startDate || Date.now());
+        const end = new Date(details.endDate || Date.now() + 86400000);
+        const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+
+        const stops = Array.isArray(details.stops) ? details.stops : [];
+        const dest = details.destination || 'Unknown';
+        const cities = stops.length > 0 ? stops : [dest];
 
         // Base cost per day (very rough heuristic)
         // Tokyo/London/Paris/NY = Expensive ($200/day)
@@ -192,7 +215,7 @@ export class AIRecommender {
         let dailyRate = 120;
         const expensiveCities = ['tokyo', 'london', 'paris', 'new york', 'singapore', 'dubai', 'zurich', 'iceland'];
 
-        const isExpensive = cities.some(c => expensiveCities.some(ec => c.toLowerCase().includes(ec)));
+        const isExpensive = cities.some(c => expensiveCities.some(ec => String(c).toLowerCase().includes(ec)));
 
         if (isExpensive) dailyRate = 220;
         if (details.type === 'leisure') dailyRate *= 1.2;
