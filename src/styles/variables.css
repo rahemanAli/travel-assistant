@@ -1,0 +1,51 @@
+:root {
+    /* Color Palette - Deep Space & Vibrance */
+    --color-bg-dark: #0F172A;
+    --color-bg-card: rgba(30, 41, 59, 0.7);
+    --color-bg-glass: rgba(15, 23, 42, 0.6);
+
+    --color-primary: #38BDF8;
+    /* Sky Blue */
+    --color-secondary: #818CF8;
+    /* Indigo */
+    --color-accent: #F472B6;
+    /* Pink */
+
+    --color-text-main: #F1F5F9;
+    --color-text-muted: #94A3B8;
+
+    --color-success: #34D399;
+    --color-warning: #FBBF24;
+    --color-danger: #FB7185;
+
+    /* Gradients */
+    /* Gradients - More Vibrant */
+    --gradient-primary: linear-gradient(135deg, #0EA5E9 0%, #6366F1 50%, #EC4899 100%);
+    --gradient-glow: radial-gradient(circle at top right, rgba(14, 165, 233, 0.4), transparent 50%);
+    --gradient-card: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.3);
+
+    /* Borders */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+
+    --border-glass: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

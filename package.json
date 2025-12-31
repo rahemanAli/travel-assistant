@@ -1,0 +1,9 @@
+{
+    "name": "travel-assistant",
+    "version": "1.0.0",
+    "description": "Smart Travel Assistant PWA",
+    "main": "index.html",
+    "dependencies": {
+        "@google/generative-ai": "^0.1.3"
+    }
+}
