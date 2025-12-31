@@ -221,6 +221,12 @@ export class AIRecommender {
                     debugMsg = ` [Using Key: ${errorJson.debug.using_key_prefix}]`;
                 }
 
+                if (errorJson.debug && errorJson.debug.available_models_for_key && errorJson.debug.available_models_for_key.length > 0) {
+                    debugMsg += `\n[Useable Models Found: ${errorJson.debug.available_models_for_key.join(', ')}]`;
+                } else if (errorJson.debug && errorJson.debug.available_models_for_key) {
+                    debugMsg += `\n[No Models Found for this Key]`;
+                }
+
                 throw new Error(`${errorJson.details || errorJson.error}${debugMsg}`);
             }
 

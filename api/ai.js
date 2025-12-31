@@ -16,29 +16,38 @@ export default async function handler(req, res) {
 
         // DEBUG: Check which models are actually available to this Key
         let availableModels = [];
-        try {
-            console.log("Checking available models via raw API...");
-            // Use native fetch (Node 18+)
-            const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-            if (listResponse.ok) {
-                const data = await listResponse.json();
-                if (data.models) {
-                    availableModels = data.models.map(m => m.name.replace('models/', ''));
-                    console.log("Available models:", availableModels);
+
+        async function fetchModels(version) {
+            try {
+                console.log(`Checking models via ${version}...`);
+                const response = await fetch(`https://generativelanguage.googleapis.com/${version}/models?key=${apiKey}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.models) {
+                        return data.models.map(m => m.name.replace('models/', ''));
+                    }
                 }
-            } else {
-                console.warn("List models failed:", listResponse.status, await listResponse.text());
+            } catch (e) {
+                console.warn(`Failed to list models on ${version}:`, e);
             }
-        } catch (listErr) {
-            console.warn("Failed to list models:", listErr);
+            return [];
         }
 
+        // Try v1beta first, then v1
+        availableModels = await fetchModels('v1beta');
+        if (availableModels.length === 0) {
+            availableModels = await fetchModels('v1');
+        }
+
+        console.log("Discovered available models:", availableModels);
+
         // Strategy: Try latest models and stable versions
-        // If we found specific models, prioritize them!
         let modelNames = [
             'gemini-1.5-flash',
+            'gemini-1.5-flash-latest',
             'gemini-1.5-flash-001',
             'gemini-1.5-pro',
+            'gemini-1.5-pro-latest',
             'gemini-1.5-pro-001',
             'gemini-1.0-pro',
             'gemini-pro'
@@ -46,9 +55,9 @@ export default async function handler(req, res) {
 
         // If we successfully listed models, try to find matches and PREPEND them
         if (availableModels.length > 0) {
-            const priorities = availableModels.filter(m => m.includes('gemini') && m.includes('flash'));
+            const priorities = availableModels.filter(m => m.includes('gemini'));
             // Add found models to the start of the list to try them first
-            modelNames = [...new Set([...priorities, ...availableModels.filter(m => m.includes('gemini')), ...modelNames])];
+            modelNames = [...new Set([...priorities, ...modelNames])];
         }
 
         let usedModel = '';
