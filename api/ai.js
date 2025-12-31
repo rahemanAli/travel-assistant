@@ -31,10 +31,29 @@ export default async function handler(req, res) {
         if (!apiKey) {
             return res.status(500).json({ error: 'Missing GEMINI_API_KEY environment variable' });
         }
+
         const genAI = new GoogleGenerativeAI(apiKey);
 
+        // --- SAFE MODEL DISCOVERY ---
+        // Try to ask Google what models this key can use.
+        // We wrap this in a deep try/catch so it NEVER crashes the main flow.
+        try {
+            console.log("Checking available models...");
+            const listResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+            if (listResp.ok) {
+                const data = await listResp.json();
+                if (data.models) {
+                    availableModels = data.models.map(m => m.name.replace('models/', ''));
+                    console.log("Discovered models:", availableModels);
+                }
+            } else {
+                console.warn("Discovery failed:", listResp.status);
+            }
+        } catch (discoveryErr) {
+            console.warn("Model discovery skipped:", discoveryErr.message);
+        }
+
         // Strategy: Force try all known working models
-        // We removed the auto-discovery 'fetch' to prevent 500 server crashes on cold starts
         modelNames = [
             'gemini-1.5-flash',
             'gemini-1.5-flash-latest',
@@ -45,6 +64,12 @@ export default async function handler(req, res) {
             'gemini-1.0-pro',
             'gemini-pro'
         ];
+
+        // If discovery worked, put those models FIRST
+        if (availableModels.length > 0) {
+            const workingModels = availableModels.filter(m => m.includes('gemini'));
+            modelNames = [...new Set([...workingModels, ...modelNames])];
+        }
 
         // Placeholder to prevent reference errors in debug response
 
