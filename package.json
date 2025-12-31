@@ -4,6 +4,9 @@
     "type": "module",
     "description": "Smart Travel Assistant PWA",
     "main": "index.html",
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "scripts": {
         "start": "node local_server.js",
         "dev": "node local_server.js"

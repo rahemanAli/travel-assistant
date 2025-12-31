@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       
       BEHAVIOR GUIDELINES:
       - **Be Conversational**: If the user says "Hi" or asks a general question, just chat! You don't need to force a trip update.
-      - **Incremental Updates**: If the user gives one piece of info (e.g. "I want to go to Tokyo"), update JUST that field (`destination`). Don't invent dates or budgets unless asked.
+      - **Incremental Updates**: If the user gives one piece of info (e.g. "I want to go to Tokyo"), update JUST that field ('destination'). Don't invent dates or budgets unless asked.
       - **Zero Destructive Actions**: Never delete existing itinerary items or data unless explicitly asked to "remove" or "clear" them.
       
       MANDATORY OUTPUT FORMAT:
