@@ -1,6 +1,7 @@
 {
     "name": "travel-assistant",
     "version": "1.0.0",
+    "type": "module",
     "description": "Smart Travel Assistant PWA",
     "main": "index.html",
     "dependencies": {
