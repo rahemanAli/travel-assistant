@@ -145,7 +145,16 @@ export function TripSetupForm() {
         renderTags();
     }
 
-    cityInput.addEventListener('input', (e) => {
+    // Debounce function to prevent lag
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    cityInput.addEventListener('input', debounce((e) => {
         const val = e.target.value.toLowerCase();
         autocompleteList.innerHTML = '';
 
@@ -159,7 +168,7 @@ export function TripSetupForm() {
         if (matches.length > 0) {
             matches.forEach(city => {
                 const item = document.createElement('div');
-                item.className = 'p-sm hover:bg-white/10 cursor-pointer text-sm border-b border-glass last:border-0';
+                item.className = 'p-sm hover:bg-white/10 cursor-pointer text-sm border-b border-glass last:border-0 transition-colors';
                 item.textContent = city;
                 item.addEventListener('click', () => addCity(city));
                 autocompleteList.appendChild(item);
@@ -168,7 +177,7 @@ export function TripSetupForm() {
         } else {
             autocompleteList.classList.add('hidden');
         }
-    });
+    }, 200)); // 200ms delay
 
     // Close list if clicked outside
     document.addEventListener('click', (e) => {

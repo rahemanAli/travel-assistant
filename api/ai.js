@@ -1,13 +1,25 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default async function handler(req, res) {
+    // Health Check for debugging
+    if (req.method === 'GET') {
+        return res.status(200).json({ status: 'ok', message: 'Travel Assistant API is Running!' });
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
     try {
-        const { currentTrip, userPrompt } = req.body;
+        // Safe Parse Body
+        const body = req.body || {};
+        const { currentTrip, userPrompt } = body;
+
         const apiKey = process.env.GEMINI_API_KEY;
+
+        if (!currentTrip && !userPrompt) {
+            return res.status(400).json({ error: 'Missing request body (currentTrip or userPrompt)' });
+        }
 
         if (!apiKey) {
             return res.status(500).json({ error: 'Missing GEMINI_API_KEY environment variable' });
