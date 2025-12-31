@@ -50,6 +50,8 @@ export class AIRecommender {
 
         // Use stops if present, otherwise destination
         const cities = stops.length > 0 ? stops : [dest];
+
+        // SAFEGUARD: details.intent might be undefined in partial AI responses
         const intent = (details.intent || '').toLowerCase();
 
         const insights = cities.map(city => {

@@ -65,29 +65,39 @@ export default async function handler(req, res) {
         let errors = [];
 
         const systemPrompt = `
-      You are a smart travel assistant. You receive a JSON object representing a trip and a User Request.
-      MANDATORY: You must return ONLY valid JSON. No markdown, no comments.
+      You are a smart, friendly travel assistant. 
+      Your goal is to have a NATURAL conversation with the user to help them plan a trip.
       
-      Current Trip: ${JSON.stringify(currentTrip)}
+      Current Trip State: ${JSON.stringify(currentTrip)}
+      User Input: "${userPrompt}"
       
-      User Request: "${userPrompt}"
+      BEHAVIOR GUIDELINES:
+      - **Be Conversational**: If the user says "Hi" or asks a general question, just chat! You don't need to force a trip update.
+      - **Incremental Updates**: If the user gives one piece of info (e.g. "I want to go to Tokyo"), update JUST that field (`destination`). Don't invent dates or budgets unless asked.
+      - **Zero Destructive Actions**: Never delete existing itinerary items or data unless explicitly asked to "remove" or "clear" them.
       
-      Task:
-      1. Understand the intent.
-      2. Modify the JSON object intelligently.
-         - **chat_response** (Required): A short, natural language message to the user.
-           - If successful: "I've added X and Y to your trip!"
-           - If unclear: "I've started a plan for Paris. What kind of budget do you have?" (The AI should still make a best-guess update).
-         - **itinerary**: Add/Update items. Ensure unique IDs, 'type': 'AI_GENERATED', valid dates.
-         - **vibe** (Required): Must be an Array of strings (e.g. ["Romantic", "Foodie"]). If unknown, use ["All"].
-         - **destination**: Update if changed.
-      3. Return the COMPLETELY UPDATED JSON object with the new 'chat_response' field.
+      MANDATORY OUTPUT FORMAT:
+      You must return a VALID JSON object with this EXACT structure (no markdown):
+      {
+        "chat_response": "Your friendly text response to the user here.",
+        "destination": "Current or updated destination string",
+        "startDate": "YYYY-MM-DD (keep existing if not changed)",
+        "endDate": "YYYY-MM-DD (keep existing if not changed)",
+        "type": "Trip type (Leisure, etc.)",
+        "vibe": ["Array", "of", "Strings"],
+        "stops": ["Array", "of", "Cities"],
+        "itinerary": [ ...keep existing array items, add new ones if requested... ],
+        "intent": "Summary of user's goal so far"
+      }
     `;
 
         for (const modelName of modelNames) {
             try {
                 console.log(`Attempting to use model: ${modelName}`);
                 const model = genAI.getGenerativeModel({ model: modelName });
+
+                // Use generateContent with the constructed prompt
+                // Force JSON mode instruction in prompt is usually enough, but for 1.5-flash we can be specific
                 result = await model.generateContent(systemPrompt);
                 usedModel = modelName;
                 break; // Success!
@@ -96,7 +106,6 @@ export default async function handler(req, res) {
                 errors.push(`${modelName}: ${e.message}`);
 
                 if (modelNames.indexOf(modelName) === modelNames.length - 1) {
-                    // Last one failed, throw error with all details
                     throw new Error(`All models failed. Details:\n${errors.join('\n')}`);
                 }
             }
