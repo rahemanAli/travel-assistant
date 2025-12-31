@@ -48,12 +48,11 @@ export default async function handler(req, res) {
                 break; // Success!
             } catch (e) {
                 console.warn(`Failed with model ${modelName}: ${e.message}`);
-                lastError = e;
-                // If 404 (Not Found) or 400 (Bad Request), try next. 
-                // If 401 (Auth) or 429 (Quota), it might not help to switch, but we try anyway just in case.
+                errors.push(`${modelName}: ${e.message}`);
+
                 if (modelNames.indexOf(modelName) === modelNames.length - 1) {
-                    // Last one failed, throw proper error
-                    throw new Error(`All models failed. Last error with ${modelName}: ${e.message}`);
+                    // Last one failed, throw error with all details
+                    throw new Error(`All models failed. Details:\n${errors.join('\n')}`);
                 }
             }
         }
