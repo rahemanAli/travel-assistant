@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
 export default async function handler(req, res) {
     // Health Check for debugging
     if (req.method === 'GET') {
@@ -11,6 +9,10 @@ export default async function handler(req, res) {
     }
 
     try {
+        // DYNAMIC IMPORT: Safe-guard against load failures
+        // This prevents "Crash on Start" if the library is missing/incompatible
+        const { GoogleGenerativeAI } = await import('@google/generative-ai');
+
         // Safe Parse Body
         const body = req.body || {};
         const { currentTrip, userPrompt } = body;
