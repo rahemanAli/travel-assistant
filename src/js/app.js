@@ -120,6 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle Store updates (re-render current view if needed)
     store.subscribe(() => {
+        // Optimization: Don't re-render entire app if we are in Chat mode
+        // The Chat component handles its own updates internally
+        if (window.location.hash === '#/chat') {
+            return;
+        }
         router.render();
     });
 
