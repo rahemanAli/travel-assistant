@@ -213,9 +213,15 @@ export class AIRecommender {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('API Error Response:', response.status, errorText);
-                throw new Error(`Server API failed with status: ${response.status}. ${errorText}`);
+                const errorJson = await response.json();
+                console.error('API Error Response:', errorJson);
+
+                let debugMsg = '';
+                if (errorJson.debug && errorJson.debug.using_key_prefix) {
+                    debugMsg = ` [Using Key: ${errorJson.debug.using_key_prefix}]`;
+                }
+
+                throw new Error(`${errorJson.details || errorJson.error}${debugMsg}`);
             }
 
             const updatedTrip = await response.json();

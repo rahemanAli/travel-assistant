@@ -88,6 +88,13 @@ export function ChatComponent() {
             }
         } catch (err) {
             if (messages.contains(loadingDiv)) messages.removeChild(loadingDiv);
+
+            let networkMsg = '';
+            if (err.message.includes('serverAPI failed')) {
+                // Try to parse the error message for the JSON details if possible, or just rely on the text
+                networkMsg = `<br><br><b>Technical Details:</b><br>${err.message}`;
+            }
+
             addMessage(`❌ <b>Error Occurred</b><br>Message: ${err.message}<br><br>If this says "Failed to fetch", it might be a network issue or the API URL is wrong.`);
             console.error(err);
         } finally {

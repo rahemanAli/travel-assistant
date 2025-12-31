@@ -71,6 +71,17 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('Gemini API Error:', error);
-        return res.status(500).json({ error: 'Failed to process AI request', details: error.message });
+
+        // Debug info: Show which key is being used (safe partial reveal)
+        const keyPrefix = process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 10) + '...' : 'NONE';
+
+        return res.status(500).json({
+            error: 'Failed to process AI request',
+            details: error.message,
+            debug: {
+                using_key_prefix: keyPrefix,
+                models_tried: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro']
+            }
+        });
     }
 }
