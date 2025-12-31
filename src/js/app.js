@@ -6,6 +6,8 @@ import { ChecklistComponent } from './components/Checklist.js';
 import { ItineraryComponent } from './components/Itinerary.js';
 import { BudgetComponent } from './components/Budget.js';
 import { ExploreComponent } from './components/Explore.js';
+import { ChatOverlay } from './components/ChatOverlay.js';
+
 
 // Vertical Stack Layout - No Carousel
 const HomeView = () => {
@@ -107,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app.appendChild(AppShell());
 
     // Initialize Chat Overlay
-    import { ChatOverlay } from './components/ChatOverlay.js';
+    // Initialize Chat Overlay
     app.appendChild(ChatOverlay());
 
     // Initialize Router
