@@ -14,7 +14,8 @@ export default async function handler(req, res) {
         }
 
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        // Use gemini-1.5-flash which is generally available and faster
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const systemPrompt = `
       You are a smart travel assistant. You receive a JSON object representing a trip and a User Request.
