@@ -14,8 +14,42 @@ export default async function handler(req, res) {
         }
         const genAI = new GoogleGenerativeAI(apiKey);
 
-        // Strategy: Try latest models first, fall back to older ones if 404/availability issues
-        const modelNames = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro'];
+        // DEBUG: Check which models are actually available to this Key
+        let availableModels = [];
+        try {
+            console.log("Checking available models via raw API...");
+            // Use native fetch (Node 18+)
+            const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+            if (listResponse.ok) {
+                const data = await listResponse.json();
+                if (data.models) {
+                    availableModels = data.models.map(m => m.name.replace('models/', ''));
+                    console.log("Available models:", availableModels);
+                }
+            } else {
+                console.warn("List models failed:", listResponse.status, await listResponse.text());
+            }
+        } catch (listErr) {
+            console.warn("Failed to list models:", listErr);
+        }
+
+        // Strategy: Try latest models and stable versions
+        // If we found specific models, prioritize them!
+        let modelNames = [
+            'gemini-1.5-flash',
+            'gemini-1.5-flash-001',
+            'gemini-1.5-pro',
+            'gemini-1.5-pro-001',
+            'gemini-1.0-pro',
+            'gemini-pro'
+        ];
+
+        // If we successfully listed models, try to find matches and PREPEND them
+        if (availableModels.length > 0) {
+            const priorities = availableModels.filter(m => m.includes('gemini') && m.includes('flash'));
+            // Add found models to the start of the list to try them first
+            modelNames = [...new Set([...priorities, ...availableModels.filter(m => m.includes('gemini')), ...modelNames])];
+        }
 
         let usedModel = '';
         let result = null;
@@ -79,7 +113,9 @@ export default async function handler(req, res) {
             details: error.message,
             debug: {
                 using_key_prefix: keyPrefix,
-                models_tried: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro']
+                // Pass the list we found (or empty if failed) to the UI
+                available_models_for_key: availableModels || [],
+                models_tried: modelNames
             }
         });
     }
