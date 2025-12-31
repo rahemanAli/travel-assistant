@@ -244,9 +244,8 @@ export class AIRecommender {
                 try {
                     errorJson = JSON.parse(errorText);
                 } catch (e) {
-                    // It was likely HTML (Vercel 500 error)
                     console.error('API Returned Non-JSON Error:', errorText);
-                    throw new Error(`Server Error (${response.status}): The backend crashed. Check Vercel logs.`);
+                    throw new Error(`Server Error (${response.status}): The backend crashed (timeout or syntax).`);
                 }
 
                 console.error('API Error Response:', errorJson);
@@ -256,13 +255,15 @@ export class AIRecommender {
                     debugMsg = ` [Using Key: ${errorJson.debug.using_key_prefix}]`;
                 }
 
-                if (errorJson.debug && errorJson.debug.available_models_for_key && errorJson.debug.available_models_for_key.length > 0) {
-                    debugMsg += `\n[Useable Models Found: ${errorJson.debug.available_models_for_key.join(', ')}]`;
-                } else if (errorJson.debug && errorJson.debug.available_models_for_key) {
-                    debugMsg += `\n[No Models Found for this Key]`;
+                const baseError = errorJson.details || errorJson.error;
+
+                // INTELLIGENT ERROR ANALYSIS
+                // If every model returned 404, it means the API is likely disabled in Google Cloud
+                if (baseError.includes('404') && baseError.includes('not found')) {
+                    throw new Error(`⚠️ <b>API Not Enabled</b><br><br>The Google AI service rejected your key.<br><b>Fix:</b> Go to Google Cloud Console > "Generative Language API" and click <b>ENABLE</b>.`);
                 }
 
-                throw new Error(`${errorJson.details || errorJson.error}${debugMsg}`);
+                throw new Error(`${baseError}${debugMsg}`);
             }
 
             const updatedTrip = await response.json();
