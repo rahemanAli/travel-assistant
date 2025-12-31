@@ -8,6 +8,11 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
+    // Variables validation for scope access in catch block
+    let modelNames = [];
+    let availableModels = [];
+    let errors = [];
+
     try {
         // DYNAMIC IMPORT: Safe-guard against load failures
         // This prevents "Crash on Start" if the library is missing/incompatible
@@ -30,7 +35,7 @@ export default async function handler(req, res) {
 
         // Strategy: Force try all known working models
         // We removed the auto-discovery 'fetch' to prevent 500 server crashes on cold starts
-        const modelNames = [
+        modelNames = [
             'gemini-1.5-flash',
             'gemini-1.5-flash-latest',
             'gemini-1.5-flash-001',
@@ -41,11 +46,10 @@ export default async function handler(req, res) {
             'gemini-pro'
         ];
 
-        const availableModels = []; // Placeholder to prevent reference errors in debug response
+        // Placeholder to prevent reference errors in debug response
 
         let usedModel = '';
         let result = null;
-        let errors = [];
 
         const systemPrompt = `
       You are a smart, friendly travel assistant. 
