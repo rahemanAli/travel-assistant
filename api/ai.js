@@ -60,16 +60,17 @@ export default async function handler(req, res) {
         const genAI = new GoogleGenerativeAI(apiKey);
 
         // Strategy: Force try all known working models
-        // We removed the auto-discovery 'fetch' to prevent 500 server crashes/timeouts on cold starts
+        // Updated based on User's Key capabilities (Gemini 2.0/2.5 availability)
         modelNames = [
+            'gemini-2.0-flash',
+            'gemini-2.5-flash',
+            'gemini-flash-latest',
+            'gemini-2.0-pro',
+            'gemini-2.5-pro',
+            'gemini-pro-latest',
+            // Fallbacks
             'gemini-1.5-flash',
-            'gemini-1.5-flash-latest',
-            'gemini-1.5-flash-001',
-            'gemini-1.5-pro',
-            'gemini-1.5-pro-latest',
-            'gemini-1.5-pro-001',
-            'gemini-1.0-pro',
-            'gemini-pro'
+            'gemini-1.5-pro'
         ];
 
         // Placeholder to prevent reference errors in debug response
