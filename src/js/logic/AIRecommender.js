@@ -82,8 +82,9 @@ export class AIRecommender {
             const potentialActivities = this.activitiesDB[cityKey] || [];
 
             // Filter by vibe if matches
+            const currentVibes = Array.isArray(details.vibe) ? details.vibe : ['All'];
             const vibeActivities = potentialActivities.filter(a =>
-                details.vibe.includes(a.vibe) || details.vibe.includes('All')
+                currentVibes.includes(a.vibe) || currentVibes.includes('All')
             );
 
             // Fallback to all if no vibe match

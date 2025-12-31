@@ -75,11 +75,13 @@ export default async function handler(req, res) {
       Task:
       1. Understand the intent.
       2. Modify the JSON object intelligently.
-         - **If the user explicitly asks to add something (e.g., 'Add dinner'), YOU MUST add it to the 'itinerary' array.**
-         - Ensure new itinerary items have unique IDs, 'type': 'AI_GENERATED', 'date' (infer from intent or use trip start date), and 'time'.
-         - If user changes destination, update 'destination', 'stops', and REGENERATE 'insights' array with valid data for new cities.
-         - If user adds interests (e.g. 'I like hiking'), add to 'interests' array if it exists, or 'vibe'.
-      3. Return the COMPLETELY UPDATED JSON object. Do not delete existing data unless asked.
+         - **chat_response** (Required): A short, natural language message to the user.
+           - If successful: "I've added X and Y to your trip!"
+           - If unclear: "I've started a plan for Paris. What kind of budget do you have?" (The AI should still make a best-guess update).
+         - **itinerary**: Add/Update items. Ensure unique IDs, 'type': 'AI_GENERATED', valid dates.
+         - **vibe** (Required): Must be an Array of strings (e.g. ["Romantic", "Foodie"]). If unknown, use ["All"].
+         - **destination**: Update if changed.
+      3. Return the COMPLETELY UPDATED JSON object with the new 'chat_response' field.
     `;
 
         for (const modelName of modelNames) {

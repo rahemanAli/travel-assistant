@@ -76,12 +76,17 @@ export function ChatComponent() {
 
             if (updatedTrip) {
                 store.setTripDetails(updatedTrip);
-                addMessage("✅ Trip updated! CHECK the Dashboard and Itinerary tabs to see the changes.");
 
-                // Add follow up suggestions
-                setTimeout(() => {
-                    addMessage("Anything else? (e.g. 'Add a museum', 'Cheap eats')");
-                }, 1000);
+                // Use the AI's custom response if available, otherwise generic success
+                const responseMsg = updatedTrip.chat_response || "✅ Trip updated! CHECK the Dashboard and Itinerary tabs to see the changes.";
+                addMessage(responseMsg.replace(/\n/g, '<br>'));
+
+                // Add follow up suggestions if not present in the response
+                if (!updatedTrip.chat_response) {
+                    setTimeout(() => {
+                        addMessage("Anything else? (e.g. 'Add a museum', 'Cheap eats')");
+                    }, 1000);
+                }
 
             } else {
                 addMessage(`❌ <b>Connection Failed</b><br><br>Details: The app couldn't reach the backend.<br><br>Possible Causes:<br>1. <b>API Key Missing</b>: Did you set GEMINI_API_KEY in Vercel?<br>2. <b>Redeploy Needed</b>: Did you redeploy after setting the key?<br><br><i>Tech Info: Check console for 404/500 errors.</i>`);
