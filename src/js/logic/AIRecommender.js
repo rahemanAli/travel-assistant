@@ -205,8 +205,8 @@ export class AIRecommender {
 
     async fetchSmartUpdate(currentTrip, prompt) {
         try {
-            console.log('Sending request to /api/chat...');
-            const response = await fetch('/api/chat', {
+            console.log('Sending request to /api/ai...');
+            const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ currentTrip, userPrompt: prompt })
