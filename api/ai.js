@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
         let usedModel = '';
         let result = null;
-        let lastError = null;
+        let errors = [];
 
         const systemPrompt = `
       You are a smart travel assistant. You receive a JSON object representing a trip and a User Request.
