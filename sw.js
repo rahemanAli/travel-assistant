@@ -28,9 +28,12 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Network first, fall back to cache for data consistency
-    // Or Cache First for assets? 
-    // Let's go with Stale While Revalidate for best hybrid
+    // API or POST requests: Network Only (Do not cache)
+    if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
+        return;
+    }
+
+    // Static Assets: Stale While Revalidate
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             const fetchPromise = fetch(event.request).then((networkResponse) => {
