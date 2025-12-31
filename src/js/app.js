@@ -6,7 +6,7 @@ import { ChecklistComponent } from './components/Checklist.js';
 import { ItineraryComponent } from './components/Itinerary.js';
 import { BudgetComponent } from './components/Budget.js';
 import { ExploreComponent } from './components/Explore.js';
-import { ChatOverlay } from './components/ChatOverlay.js';
+import { ChatComponent } from './components/ChatPage.js';
 
 
 // Vertical Stack Layout - No Carousel
@@ -108,17 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize App Shell
     app.appendChild(AppShell());
 
-    // Initialize Chat Overlay
-    // Initialize Chat Overlay
-    app.appendChild(ChatOverlay());
-
     // Initialize Router
     const router = new Router({
         '#/': HomeView,
         '#/checklist': ChecklistView,
         '#/itinerary': ItineraryView,
         '#/budget': BudgetView,
-        '#/explore': () => ExploreComponent()
+        '#/explore': () => ExploreComponent(),
+        '#/chat': ChatComponent // New Route
     });
 
     // Handle Store updates (re-render current view if needed)

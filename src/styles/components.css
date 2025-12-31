@@ -41,6 +41,36 @@
     font-weight: bold;
 }
 
+/* Special Center AI Button */
+.special-nav-btn {
+    background: var(--gradient-primary);
+    color: white !important;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    margin-top: -30px;
+    /* Float effect */
+    box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.5);
+    border: 4px solid #0F172A;
+    /* Match background to look like cutout */
+    display: flex;
+    /* Override nav-link flex */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.special-nav-btn i {
+    font-size: 1.75rem;
+    margin-bottom: 0;
+}
+
+.special-nav-btn span {
+    font-size: 0.65rem;
+    font-weight: bold;
+    margin-top: -2px;
+}
+
 /* Header Styles */
 .app-header {
     position: sticky;

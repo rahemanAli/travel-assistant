@@ -57,11 +57,6 @@ export function ExploreComponent() {
                         </a>
                     `).join('')}
                 </div>
-                <div class="mt-xl">
-                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
-                        <div style="width: 5%; height: 100%; background: var(--gradient-primary); border-radius: 99px;"></div>
-                    </div>
-                </div>
 
                 <h3 class="text-sm font-bold mb-sm text-secondary">Experiences</h3>
                 <div class="grid grid-cols-2 gap-lg pb-xl">
