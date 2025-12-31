@@ -205,6 +205,7 @@ export class AIRecommender {
 
     async fetchSmartUpdate(currentTrip, prompt) {
         try {
+            console.log('Sending request to /api/chat...');
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -212,14 +213,16 @@ export class AIRecommender {
             });
 
             if (!response.ok) {
-                throw new Error('Server API failed');
+                const errorText = await response.text();
+                console.error('API Error Response:', response.status, errorText);
+                throw new Error(`Server API failed with status: ${response.status}. ${errorText}`);
             }
 
             const updatedTrip = await response.json();
             return updatedTrip;
         } catch (error) {
-            console.warn('Backend API not available or failed. Falling back to local logic.', error);
-            return null; // Signal that we should proceed with local logic
+            console.warn('Backend API not available or failed.', error);
+            throw error; // Re-throw to show in UI
         }
     }
 }

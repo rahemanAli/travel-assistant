@@ -41,20 +41,20 @@ export function TripSetupForm() {
             <div class="form-group">
                 <label class="text-xs text-muted mb-sm block">Trip Type</label>
                 <div class="trip-type-selector grid grid-cols-3 gap-sm">
-                    <label class="type-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="type-option glass p-md flex flex-col items-center justify-center rounded-xl cursor-pointer transition-all hover:bg-white/10 active:scale-95 border border-transparent">
                         <input type="radio" name="type" value="leisure" checked class="hidden">
-                        <i class="ph ph-sun text-xl text-primary mb-xs"></i>
-                        <span class="text-xs">Leisure</span>
+                        <div class="bg-primary/20 p-xs rounded-full mb-xs"><i class="ph ph-sun text-xl text-primary"></i></div>
+                        <span class="text-xs font-bold text-white">Leisure</span>
                     </label>
-                    <label class="type-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="type-option glass p-md flex flex-col items-center justify-center rounded-xl cursor-pointer transition-all hover:bg-white/10 active:scale-95 border border-transparent">
                         <input type="radio" name="type" value="business" class="hidden">
-                        <i class="ph ph-briefcase text-xl text-secondary mb-xs"></i>
-                        <span class="text-xs">Business</span>
+                        <div class="bg-secondary/20 p-xs rounded-full mb-xs"><i class="ph ph-briefcase text-xl text-secondary"></i></div>
+                        <span class="text-xs font-bold text-white">Business</span>
                     </label>
-                    <label class="type-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="type-option glass p-md flex flex-col items-center justify-center rounded-xl cursor-pointer transition-all hover:bg-white/10 active:scale-95 border border-transparent">
                         <input type="radio" name="type" value="adventure" class="hidden">
-                        <i class="ph ph-mountains text-xl text-accent mb-xs"></i>
-                        <span class="text-xs">Adventure</span>
+                        <div class="bg-accent/20 p-xs rounded-full mb-xs"><i class="ph ph-mountains text-xl text-accent"></i></div>
+                        <span class="text-xs font-bold text-white">Adventure</span>
                     </label>
                 </div>
             </div>
@@ -62,29 +62,35 @@ export function TripSetupForm() {
             <div class="form-group">
                 <label class="text-xs text-muted mb-sm block">What's the Vibe? (Select all that apply)</label>
                 <div class="vibe-selector grid grid-cols-3 gap-sm">
-                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all hover:bg-white/10 border border-transparent">
                         <input type="checkbox" name="vibe" value="Foodie" class="hidden">
-                        <span class="text-xs">🍜 Foodie</span>
+                        <span class="text-xl mb-1">🍜</span>
+                        <span class="text-[10px] font-bold tracking-wide uppercase text-muted">Foodie</span>
                     </label>
-                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all hover:bg-white/10 border border-transparent">
                         <input type="checkbox" name="vibe" value="History" class="hidden">
-                        <span class="text-xs">⛩️ History</span>
+                        <span class="text-xl mb-1">⛩️</span>
+                        <span class="text-[10px] font-bold tracking-wide uppercase text-muted">History</span>
                     </label>
-                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all hover:bg-white/10 border border-transparent">
                         <input type="checkbox" name="vibe" value="Nature" class="hidden">
-                        <span class="text-xs">🌿 Nature</span>
+                        <span class="text-xl mb-1">🌿</span>
+                        <span class="text-[10px] font-bold tracking-wide uppercase text-muted">Nature</span>
                     </label>
-                     <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                     <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all hover:bg-white/10 border border-transparent">
                         <input type="checkbox" name="vibe" value="Urban" class="hidden">
-                        <span class="text-xs">🏙️ Urban</span>
+                        <span class="text-xl mb-1">🏙️</span>
+                        <span class="text-[10px] font-bold tracking-wide uppercase text-muted">Urban</span>
                     </label>
-                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                    <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all hover:bg-white/10 border border-transparent">
                         <input type="checkbox" name="vibe" value="Chill" class="hidden">
-                        <span class="text-xs">🧘 Chill</span>
+                        <span class="text-xl mb-1">🧘</span>
+                        <span class="text-[10px] font-bold tracking-wide uppercase text-muted">Chill</span>
                     </label>
-                     <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-md cursor-pointer">
+                     <label class="vibe-option glass p-sm flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all hover:bg-white/10 border border-transparent">
                         <input type="checkbox" name="vibe" value="Adventure" class="hidden">
-                        <span class="text-xs">🎢 Adventure</span>
+                        <span class="text-xl mb-1">🎢</span>
+                        <span class="text-[10px] font-bold tracking-wide uppercase text-muted">Thrills</span>
                     </label>
                 </div>
             </div>

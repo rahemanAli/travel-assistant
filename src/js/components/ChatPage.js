@@ -83,11 +83,11 @@ export function ChatComponent() {
                 }, 1000);
 
             } else {
-                addMessage("❌ <b>Connection Failed</b><br><br>I couldn't reach the AI. Please check:<br>1. Is <code>GEMINI_API_KEY</code> set in Vercel Settings?<br>2. Did you redeploy after setting it?");
+                addMessage(`❌ <b>Connection Failed</b><br><br>Details: The app couldn't reach the backend.<br><br>Possible Causes:<br>1. <b>API Key Missing</b>: Did you set GEMINI_API_KEY in Vercel?<br>2. <b>Redeploy Needed</b>: Did you redeploy after setting the key?<br><br><i>Tech Info: Check console for 404/500 errors.</i>`);
             }
         } catch (err) {
             if (messages.contains(loadingDiv)) messages.removeChild(loadingDiv);
-            addMessage("❌ Error: " + err.message);
+            addMessage(`❌ <b>Error Occurred</b><br>Message: ${err.message}<br><br>If this says "Failed to fetch", it might be a network issue or the API URL is wrong.`);
             console.error(err);
         } finally {
             sendBtn.disabled = false;
