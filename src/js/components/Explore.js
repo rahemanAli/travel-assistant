@@ -57,9 +57,14 @@ export function ExploreComponent() {
                         </a>
                     `).join('')}
                 </div>
+                <div class="mt-xl">
+                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 5%; height: 100%; background: var(--gradient-primary); border-radius: 99px;"></div>
+                    </div>
+                </div>
 
                 <h3 class="text-sm font-bold mb-sm text-secondary">Experiences</h3>
-                <div class="grid grid-cols-2 gap-md">
+                <div class="grid grid-cols-2 gap-lg pb-xl">
                     ${experiences.map(e => `
                         <a href="https://www.tripadvisor.com/Search?q=${encodeURIComponent(e.title + ' ' + city)}" target="_blank" class="glass p-md rounded-md flex flex-col items-center text-center hover:bg-white/5 transition-colors no-underline" style="text-decoration: none; color: inherit;">
                             <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-sm">

@@ -26,8 +26,12 @@ export default async function handler(req, res) {
       
       Task:
       1. Understand the intent.
-      2. Modify the JSON object intelligently (update itinerary, budget, recommendations, or insights).
-      3. Return the COMPLETELY UPDATED JSON object.
+      2. Modify the JSON object intelligently.
+         - **If the user explicitly asks to add something (e.g., 'Add dinner'), YOU MUST add it to the 'itinerary' array.**
+         - Ensure new itinerary items have unique IDs, 'type': 'AI_GENERATED', 'date' (infer from intent or use trip start date), and 'time'.
+         - If user changes destination, update 'destination', 'stops', and REGENERATE 'insights' array with valid data for new cities.
+         - If user adds interests (e.g. 'I like hiking'), add to 'interests' array if it exists, or 'vibe'.
+      3. Return the COMPLETELY UPDATED JSON object. Do not delete existing data unless asked.
     `;
 
         const result = await model.generateContent(systemPrompt);

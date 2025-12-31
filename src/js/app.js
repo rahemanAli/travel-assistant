@@ -106,6 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize App Shell
     app.appendChild(AppShell());
 
+    // Initialize Chat Overlay
+    import { ChatOverlay } from './components/ChatOverlay.js';
+    app.appendChild(ChatOverlay());
+
     // Initialize Router
     const router = new Router({
         '#/': HomeView,
