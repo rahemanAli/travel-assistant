@@ -4,6 +4,6 @@
     "description": "Smart Travel Assistant PWA",
     "main": "index.html",
     "dependencies": {
-        "@google/generative-ai": "^0.1.3"
+        "@google/generative-ai": "^0.21.0"
     }
 }
